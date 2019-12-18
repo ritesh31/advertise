@@ -37,3 +37,8 @@ class VehicleView(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.validated_data['vehicle_owner'] = self.request.user.vehicle_owner
         serializer.save()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+           return Vehicle.objects.all()
+        return Vehicle.objects.filter(vehicle_owner=self.request.user.vehicle_owner)

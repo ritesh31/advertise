@@ -43,6 +43,12 @@ class AdvertiseView(viewsets.ModelViewSet):
         serializer.validated_data['advertiser'] = self.request.user.advertiser
         serializer.save()
 
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Advertise.objects.all()
+        return Advertise.objects.filter(advertiser=self.request.user.advertiser)
+
 class DocumentView(KnoxLoginView):
     """
     A simple ViewSet for creating document objects.
